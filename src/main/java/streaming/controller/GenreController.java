@@ -8,9 +8,11 @@ package streaming.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import streaming.entity.Genre;
 import streaming.service.GenreCrudService;
 
 /**
@@ -29,11 +31,43 @@ public class GenreController {
         
         return "redirect:/liste_genres";
     }
+    @RequestMapping(value = "/ajouter_genre", method = RequestMethod.GET)
+    public String ajouterGET(Model model) {
+        Genre genre = new Genre();
+        model.addAttribute("genreAct", genre);
+                
+        return "ajouter_genre.jsp";
+    }
     
-    @RequestMapping(value = "/liste_genres", method = RequestMethod.GET)
+    @RequestMapping(value = "/ajouter_genre", method = RequestMethod.POST)
+    public String ajouterPOST(@ModelAttribute("genreAct") Genre genre) {
+        service.save(genre);
+                
+        return "redirect:/liste_genres";
+    }
+    
+    @RequestMapping(value = "/modifier_genre/{val}", method = RequestMethod.GET)
+    public String modifierGET(@PathVariable("val") long genreId, Model model) {
+        Genre genre = service.findOne(genreId);
+        model.addAttribute("genreAct", genre);
+                
+        return "modifier_genre.jsp";
+    }
+    
+    @RequestMapping(value = "/modifier_genre", method = RequestMethod.POST)
+    public String modifierPOST(@ModelAttribute("genreAct") Genre genre) {
+        service.save(genre);
+                
+        return "redirect:/liste_genres";
+    }
+
+    @RequestMapping(value = {"/liste_genres", "/"}, method = RequestMethod.GET)
     public String lister(Model model) {
-        model.addAttribute("genres", service.findAllByOrderByNomAsc());
+//        model.addAttribute("genres", service.findAllByOrderByNomAsc());
+        model.addAttribute("genres", service.findAll());
         
         return "genre_lister.jsp";
     }
+    
+    
 }
