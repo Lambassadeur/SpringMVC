@@ -14,7 +14,7 @@
     </head>
     <body>
         <h1>Liste des genres</h1>
-        <a href="ajouter_genre">Ajouter genre</a>
+        <a href="<spring:url value="ajouter_genre" />">Ajouter genre</a>
 
         <br/><br/>
          <c:forEach items="${genres}" var="genreAct">
